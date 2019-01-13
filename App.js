@@ -7,17 +7,16 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, ActivityIndicator} from 'react-native';
 import firebase from 'firebase';
-
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import ListUserComponent from './ListUserComponent';
 
 export default class App extends Component {
+
+  state = {
+    users: {},
+    loading: true
+  }
 
   componentWillMount() {
     // Initialize Firebase
@@ -31,6 +30,12 @@ export default class App extends Component {
     };
     firebase.initializeApp(config);
 
+    let usersRef = firebase.database().ref("usuarios");
+    usersRef.on('value', (snapshot) => {
+      let data = snapshot.val();
+      let users = Object.values(data);
+      this.setState({users: users, loading: false});
+    })
   }
 
   interactingFirebase() {
@@ -46,11 +51,26 @@ export default class App extends Component {
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        <Button onPress={ () => this.interactingFirebase() } title="New Interaction" color="#841584" accessibilityLabel="Salvar Dados" />
-      </View>
-    );
+    if(this.state.loading){
+      return (
+        <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+          <ActivityIndicator size="large" color="dodgerblue" />
+        </View>
+      )
+    }
+    else{
+      return (
+        <View style={styles.container}>
+          <Button onPress={ () => this.interactingFirebase() } title="New Interaction" color="#841584" accessibilityLabel="Salvar Dados" />
+  
+          {
+            this.state.users.length > 0
+            ? <ListUserComponent users={this.state.users} />
+            : <Text>No Users</Text>
+          }
+        </View>
+      );
+    }
   }
 }
 
