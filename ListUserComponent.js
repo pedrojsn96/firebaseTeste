@@ -13,12 +13,17 @@ export default class ListUserComponent extends Component {
     return (
         <FlatList
         data={ this.props.users }
-        keyExtractor={(user) => user.id}
+        keyExtractor={(item) => item.index}
         renderItem={
-            ({user}) => 
-            <View style={styles.itemView}>
-                <Text style={styles.itemList}>{user.nome} - {user.sobrenome}</Text>
-            </View>
+            (item) => {
+                console.log('user lol', item)
+                const user = item.item;
+                return(
+                    <View style={styles.itemView}>
+                    <Text style={styles.itemList}>{user.nome} {user.sobrenome}</Text>
+                </View>
+                )
+            }
         }
         />
     );
