@@ -56,6 +56,33 @@ export default class App extends Component {
       );
   }
 
+  verificarUsuarioLogado(){
+    const usuario = firebase.auth();
+    
+    /*
+    1 - verificar se está logado
+    const currentUser = usuario.currentUser;
+
+    if( currentUser ){
+      alert("Usuário está logado!");
+    } else {
+      alert("Usuário não está logado!");
+    }
+    */
+
+    // verifica se está logado usando um listener
+    usuario.onAuthStateChanged(
+      (currentUser) => {
+        if( currentUser ){
+          alert("Usuário está logado!");
+        } else {
+          alert("Usuário não está logado!");
+        }
+      }
+    );
+  }
+
+
   // interactingFirebase() {
   //   var users = firebase.database().ref("usuarios");
 
@@ -72,6 +99,7 @@ export default class App extends Component {
     return(
       <View style={styles.container}>
         <Button onPress={ () => this.cadastrarUsuario() } title="New User" color="#841584" accessibilityLabel="New User" />
+        <Button onPress={ () => this.verificarUsuarioLogado() } title="Check Logged" color="#841584" accessibilityLabel="Check Logged" />
       </View>
     )
     
