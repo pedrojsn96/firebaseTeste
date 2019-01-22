@@ -40,7 +40,7 @@ export default class App extends Component {
   }
 
   cadastrarUsuario(){
-      var email = "pedroneto@email.com";
+      var email = "pedro@email.com";
       var senha = "12341234";
 
       const usuario = firebase.auth();
@@ -81,25 +81,54 @@ export default class App extends Component {
       }
     );
   }
+  
+  loginUser() {
+    var email = "pedro@email.com";
+    var senha = "312312312312";
 
+    const usuario = firebase.auth();
 
-  // interactingFirebase() {
-  //   var users = firebase.database().ref("usuarios");
+    usuario.signInWithEmailAndPassword(
+      email,
+      senha
+    ).catch(
+      (error) => {
+        if (error.code == "auth/invalid-email" || error.code == "auth/wrong-password") {
+          // alert(error.message);  
+          alert("Seus dados de acesso estão inválidos. Verifique-os e tente novamente!");
+        } else {
+          alert(error.message);  
+        }
+      }
+    );
+    
+  }
 
-  //   // users.child("003").child("nome").set("Pedro Jose de Souza Neto");
-  //   // users.child("002").remove();
-  //   // users.push().child("nome").set("Pedro Jose de Souza Neto");
-  //   users.push().set({
-  //     nome: "Pedro",
-  //     sobrenome: "Neto"
-  //   });
-  // }
+  logoutUser() {
+    const usuario = firebase.auth();
+    usuario.signOut();
+  }
+
+  interactingFirebase() {
+    var users = firebase.database().ref("usuarios");
+
+    // users.child("003").child("nome").set("Pedro Jose de Souza Neto");
+    // users.child("002").remove();
+    // users.push().child("nome").set("Pedro Jose de Souza Neto");
+    users.push().set({
+      nome: "Pedro",
+      sobrenome: "Neto"
+    });
+  }
 
   render() {
     return(
       <View style={styles.container}>
         <Button onPress={ () => this.cadastrarUsuario() } title="New User" color="#841584" accessibilityLabel="New User" />
+        {/* <Button onPress={ () => this.interactingFirebase() } title="New User" color="#841584" accessibilityLabel="New User" /> */}
         <Button onPress={ () => this.verificarUsuarioLogado() } title="Check Logged" color="#841584" accessibilityLabel="Check Logged" />
+        <Button onPress={ () => this.logoutUser() } title="Log out" color="#841584" accessibilityLabel="Log out" />
+        <Button onPress={ () => this.loginUser() } title="Log in" color="#841584" accessibilityLabel="Log in" />
       </View>
     )
     
